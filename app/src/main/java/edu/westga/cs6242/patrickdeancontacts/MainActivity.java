@@ -102,8 +102,10 @@ public class MainActivity extends AppCompatActivity {
         RadioButton rbCheckedRadioButton =
                 (RadioButton) findViewById(this.phoneRadio.getCheckedRadioButtonId());
         try {
-            this.contact = new Contact(this.firstNameField.getText().toString(), this.lastNameField.getText().toString(),
-                    this.phoneField.getText().toString(), this.emailField.getText().toString(),
+            this.contact = new Contact(this.firstNameField.getText().toString(),
+                    this.lastNameField.getText().toString(),
+                    this.phoneField.getText().toString(),
+                    this.emailField.getText().toString(),
                     rbCheckedRadioButton.getText().toString());
         } catch (Exception e) {
             this.tvErrorText.setText(e.getMessage());
@@ -120,6 +122,12 @@ public class MainActivity extends AppCompatActivity {
         this.tvErrorText.setVisibility(View.INVISIBLE);
     }
 
+    /**
+     * This code allows the user to close the input key board when the user clicks off
+     * of the keyboard.
+     * @param v a view object, this is the relative layout container that houses the components of
+     *          this simple application.
+     */
     private void addUIListeners(View v) {
         if (!(v instanceof EditText)) {
             v.setOnTouchListener(new View.OnTouchListener() {
@@ -138,6 +146,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This is the actual method that physically hides the key board from view.
+     * @param a this activity, i.e. the MainActivity.
+     */
     private void hideKeyboard(Activity a) {
         InputMethodManager imm =
                 (InputMethodManager) a.getSystemService(Activity.INPUT_METHOD_SERVICE);
