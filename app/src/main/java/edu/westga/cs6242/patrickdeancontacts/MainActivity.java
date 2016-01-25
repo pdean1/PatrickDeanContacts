@@ -69,6 +69,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Clears the form fields.
+     * @param v NOT USED
+     */
     public void clickClearFields(View v) {
         this.firstNameField.setText("");
         this.lastNameField.setText("");
