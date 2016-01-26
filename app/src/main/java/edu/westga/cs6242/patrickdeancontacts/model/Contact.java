@@ -1,5 +1,7 @@
 package edu.westga.cs6242.patrickdeancontacts.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Patterns;
 
 /**
@@ -10,12 +12,16 @@ import android.util.Patterns;
  *
  * This class contains methods for creating, getting, and setting a contacts values and it's state.
  */
-public class Contact {
+public class Contact implements Parcelable {
     private String firstName;
     private String lastName;
     private String phoneNumber;
     private String emailAddr;
     private String phoneNumberType;
+
+    public Contact() {
+
+    }
 
     /**
      * This constructor accepts a First Name (fn), Last Name (ln), Phone Number (pn), Email Address
@@ -52,6 +58,61 @@ public class Contact {
         }
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        if (firstName == null || firstName.equals("")) {
+            throw new IllegalArgumentException("First Name of a Contact must contain"
+                    + " a string at least one character");
+        }
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = (lastName == null) ? "" : lastName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        if (this.auditPhoneNumber(phoneNumber) == false) {
+            throw new IllegalArgumentException("Contact's phone number must be a valid 7"
+                    + " digit or more number");
+        }
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getEmailAddr() {
+        return emailAddr;
+    }
+
+    public void setEmailAddr(String emailAddr) {
+        if (this.auditEmailAddress(emailAddr) == false) {
+            throw new IllegalArgumentException("Email Address must resemble, example@email.com");
+        }
+        this.emailAddr = emailAddr;
+    }
+
+    public String getPhoneNumberType() {
+        return phoneNumberType;
+    }
+
+    public void setPhoneNumberType(String phoneNumberType) {
+        if (phoneNumberType.equals("Home") || phoneNumberType.equals("Cell")) {
+            this.phoneNumberType = phoneNumberType;
+        } else {
+            throw new IllegalArgumentException("The type of phone number must be Home or Cell");
+        }
+    }
+
     /**
      * This method audits the phone number for validity. A phone number must be at least 7 digits
      * long and be only digits, not alpha characters. If the passed parameter violates the
@@ -77,5 +138,37 @@ public class Contact {
             return false;
         }
         return Patterns.EMAIL_ADDRESS.matcher(ea).matches();
+    }
+
+    public static final Parcelable.Creator<Contact> CREATOR = new Creator<Contact>() {
+        @Override
+        public Contact createFromParcel(Parcel source) {
+            Contact c = new Contact();
+            c.firstName = source.readString();
+            c.lastName = source.readString();
+            c.emailAddr = source.readString();
+            c.phoneNumber = source.readString();
+            c.phoneNumberType = source.readString();
+            return c;
+        }
+
+        @Override
+        public Contact[] newArray(int size) {
+            return new Contact[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.firstName);
+        dest.writeString(this.lastName);
+        dest.writeString(this.emailAddr);
+        dest.writeString(this.phoneNumber);
+        dest.writeString(this.phoneNumberType);
     }
 }

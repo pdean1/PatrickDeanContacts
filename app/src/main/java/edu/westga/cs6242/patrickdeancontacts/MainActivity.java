@@ -2,6 +2,7 @@ package edu.westga.cs6242.patrickdeancontacts;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -24,6 +25,8 @@ import android.widget.TextView;
 import edu.westga.cs6242.patrickdeancontacts.model.Contact;
 
 public class MainActivity extends AppCompatActivity {
+
+    public final static String CONTACT_KEY = "edu.westga.cs6242.patrickdeancontacts.pass";
 
     private Contact contact;
     private EditText firstNameField = null;
@@ -63,9 +66,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void clickSaveContact(View v) {
         if (this.createContact()) {
-            this.tvErrorText.setText("Contact added.");
-            this.tvErrorText.setTextColor(Color.GREEN);
-            this.showErrorText();
+            Intent intent = new Intent(v.getContext(), ViewContact.class);
+            Bundle bundleOfJoy = new Bundle();
+            bundleOfJoy.putParcelable(CONTACT_KEY, this.contact);
+            intent.putExtras(bundleOfJoy);
+            startActivity(intent);
         }
     }
 
@@ -85,6 +90,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean createContact() {
+        if (!this.auditFormData())
+            return false;
+        RadioButton rbCheckedRadioButton =
+                (RadioButton) findViewById(this.phoneRadio.getCheckedRadioButtonId());
+        try {
+            this.contact = new Contact(this.firstNameField.getText().toString(),
+                    this.lastNameField.getText().toString(),
+                    this.phoneField.getText().toString(),
+                    this.emailField.getText().toString(),
+                    rbCheckedRadioButton.getText().toString());
+        } catch (Exception e) {
+            this.tvErrorText.setText(e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    private boolean auditFormData() {
         if (this.firstNameField.getText().toString().equals("") || this.firstNameField.getText() == null) {
             this.tvErrorText.setText("Please provide the contact's first name.");
             this.showErrorText();
@@ -101,18 +124,6 @@ public class MainActivity extends AppCompatActivity {
         if (!Patterns.EMAIL_ADDRESS.matcher(this.emailField.getText()).matches()) {
             this.tvErrorText.setText("Please provide a valid email address.");
             this.showErrorText();
-            return false;
-        }
-        RadioButton rbCheckedRadioButton =
-                (RadioButton) findViewById(this.phoneRadio.getCheckedRadioButtonId());
-        try {
-            this.contact = new Contact(this.firstNameField.getText().toString(),
-                    this.lastNameField.getText().toString(),
-                    this.phoneField.getText().toString(),
-                    this.emailField.getText().toString(),
-                    rbCheckedRadioButton.getText().toString());
-        } catch (Exception e) {
-            this.tvErrorText.setText(e.getMessage());
             return false;
         }
         return true;

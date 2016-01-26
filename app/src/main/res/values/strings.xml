@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Patrick Dean\'s Contacts App</string>
+    <string name="title_activity_view_contact">ViewContact</string>
 </resources>
