@@ -26,7 +26,11 @@ import edu.westga.cs6242.patrickdeancontacts.model.Contact;
 
 public class MainActivity extends AppCompatActivity {
 
-    public final static String CONTACT_KEY = "edu.westga.cs6242.patrickdeancontacts.pass";
+    /**
+     * Contact passed to View Contact Activity
+     */
+    public final static String CONTACT_KEY
+            = "edu.westga.cs6242.patrickdeancontacts.created_contact";
 
     private Contact contact;
     private EditText firstNameField = null;
@@ -53,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * sets up the classes instance variables
+     */
     private void setUpVariables() {
         this.firstNameField = (EditText) findViewById(R.id.etFirstName);
         this.lastNameField = (EditText) findViewById(R.id.etLastName);
@@ -64,6 +71,10 @@ public class MainActivity extends AppCompatActivity {
         this.tvErrorText.setTextColor(Color.RED);
     }
 
+    /**
+     * Event that is fired when the save button is clicked
+     * @param v
+     */
     public void clickSaveContact(View v) {
         if (this.createContact()) {
             Intent intent = new Intent(v.getContext(), ViewContact.class);
@@ -89,6 +100,11 @@ public class MainActivity extends AppCompatActivity {
         this.hideErrorText();
     }
 
+    /**
+     * Attempts to create the contact by auditing the form data then building the contact's data,
+     * then creating the contact object
+     * @return true if all good.
+     */
     private boolean createContact() {
         if (!this.auditFormData())
             return false;
@@ -107,6 +123,10 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * This function audits the data passed in the contact phone.
+     * @return true if data valid, false otherwise
+     */
     private boolean auditFormData() {
         if (this.firstNameField.getText().toString().equals("") || this.firstNameField.getText() == null) {
             this.tvErrorText.setText("Please provide the contact's first name.");
@@ -129,10 +149,16 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Sets the error text property to visible
+     */
     private void showErrorText() {
         this.tvErrorText.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * Sets the error text property to invisible
+     */
     private void hideErrorText() {
         this.tvErrorText.setVisibility(View.INVISIBLE);
     }
@@ -168,7 +194,11 @@ public class MainActivity extends AppCompatActivity {
     private void hideKeyboard(Activity a) {
         InputMethodManager imm =
                 (InputMethodManager) a.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(a.getCurrentFocus().getWindowToken(), 0);
+        try {
+            imm.hideSoftInputFromWindow(a.getCurrentFocus().getWindowToken(), 0);
+        } catch (NullPointerException npe) {
+            this.tvErrorText.setText(npe.getMessage());
+        }
     }
 
 }
