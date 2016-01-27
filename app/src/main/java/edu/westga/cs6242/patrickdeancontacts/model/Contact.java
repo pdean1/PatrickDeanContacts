@@ -9,7 +9,7 @@ import android.util.Patterns;
  * This file contains the code for the Contact class. The contact class represents just what you
  * think it would, a contact. A contact has a name (composed of a first and last name), an email
  * address, and a phone number (be it home or cell).
- *
+ * <p/>
  * This class contains methods for creating, getting, and setting a contacts values and it's state.
  */
 public class Contact implements Parcelable {
@@ -26,16 +26,17 @@ public class Contact implements Parcelable {
     /**
      * This constructor accepts a First Name (fn), Last Name (ln), Phone Number (pn), Email Address
      * (ea), and the contact type (pnt), all of which are Strings.
-     * @param fn The first name of the contact
-     * @param ln The last name of the contact
-     * @param pn The phone number of the contact
-     * @param ea The email address of the contact
+     *
+     * @param fn  The first name of the contact
+     * @param ln  The last name of the contact
+     * @param pn  The phone number of the contact
+     * @param ea  The email address of the contact
      * @param pnt The phone number type of the of the phone number, home or cell
      */
     public Contact(String fn, String ln, String pn, String ea, String pnt) {
         if (fn == null || fn.equals("")) {
             throw new IllegalArgumentException("First Name of a Contact must contain"
-                      + " a string at least one character");
+                    + " a string at least one character");
         } else {
             this.firstName = fn;
         }
@@ -117,12 +118,12 @@ public class Contact implements Parcelable {
      * This method audits the phone number for validity. A phone number must be at least 7 digits
      * long and be only digits, not alpha characters. If the passed parameter violates the
      * previously stated contract then the function will return false, else return true.
+     *
      * @param pn A contact's phone number
      * @return true for valid phone number, false otherwise
      */
     private boolean auditPhoneNumber(String pn) {
-        if (pn == null || pn.length() < 7)
-        {
+        if (pn == null || pn.length() < 7) {
             return false;
         }
         for (int i = 0; i < pn.length(); i++) {
@@ -138,6 +139,35 @@ public class Contact implements Parcelable {
             return false;
         }
         return Patterns.EMAIL_ADDRESS.matcher(ea).matches();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Contact)) return false;
+
+        Contact contact = (Contact) o;
+
+        if (getFirstName() != null ? !getFirstName().equals(contact.getFirstName()) : contact.getFirstName() != null)
+            return false;
+        if (getLastName() != null ? !getLastName().equals(contact.getLastName()) : contact.getLastName() != null)
+            return false;
+        if (getPhoneNumber() != null ? !getPhoneNumber().equals(contact.getPhoneNumber()) : contact.getPhoneNumber() != null)
+            return false;
+        if (getEmailAddr() != null ? !getEmailAddr().equals(contact.getEmailAddr()) : contact.getEmailAddr() != null)
+            return false;
+        return !(getPhoneNumberType() != null ? !getPhoneNumberType().equals(contact.getPhoneNumberType()) : contact.getPhoneNumberType() != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getFirstName() != null ? getFirstName().hashCode() : 0;
+        result = 31 * result + (getLastName() != null ? getLastName().hashCode() : 0);
+        result = 31 * result + (getPhoneNumber() != null ? getPhoneNumber().hashCode() : 0);
+        result = 31 * result + (getEmailAddr() != null ? getEmailAddr().hashCode() : 0);
+        result = 31 * result + (getPhoneNumberType() != null ? getPhoneNumberType().hashCode() : 0);
+        return result;
     }
 
     public static final Parcelable.Creator<Contact> CREATOR = new Creator<Contact>() {

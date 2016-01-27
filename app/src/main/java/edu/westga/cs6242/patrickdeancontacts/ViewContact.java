@@ -2,14 +2,13 @@ package edu.westga.cs6242.patrickdeancontacts;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
 import edu.westga.cs6242.patrickdeancontacts.model.Contact;
+import edu.westga.cs6242.patrickdeancontacts.util.ContactAppUtil;
 
 public class ViewContact extends AppCompatActivity {
 
@@ -17,19 +16,18 @@ public class ViewContact extends AppCompatActivity {
     private TextView tvEmail;
     private TextView tvPhone;
 
-    private Contact c;
+    private Contact contact;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.c = (Contact) getIntent().getParcelableExtra(MainActivity.CONTACT_KEY);
+        this.contact = (Contact) getIntent().getParcelableExtra(ContactAppUtil.CONTACT_KEY);
         setContentView(R.layout.activity_view_contact);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         this.tvName = (TextView) findViewById(R.id.tvName);
         this.tvEmail = (TextView) findViewById(R.id.tvEmail);
         this.tvPhone = (TextView) findViewById(R.id.tvPhone);
-
         this.buildDisplay();
     }
 
@@ -43,9 +41,9 @@ public class ViewContact extends AppCompatActivity {
         String email = "";
         String phone = "";
 
-        name = this.c.getFirstName() + " " + this.c.getLastName();
-        email = this.c.getEmailAddr();
-        phone = this.c.getPhoneNumberType() + ": " + this.c.getPhoneNumber();
+        name = this.contact.getFirstName() + " " + this.contact.getLastName();
+        email = this.contact.getEmailAddr();
+        phone = this.contact.getPhoneNumberType() + ": " + this.contact.getPhoneNumber();
 
         this.tvName.setText(name);
         this.tvEmail.setText(email);

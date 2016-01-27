@@ -1,36 +1,26 @@
 package edu.westga.cs6242.patrickdeancontacts;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Patterns;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import edu.westga.cs6242.patrickdeancontacts.model.Contact;
+import edu.westga.cs6242.patrickdeancontacts.util.ContactAppUtil;
 
 public class MainActivity extends AppCompatActivity {
-
-    /**
-     * Contact passed to View Contact Activity
-     */
-    public final static String CONTACT_KEY
-            = "edu.westga.cs6242.patrickdeancontacts.created_contact";
 
     private Contact contact;
     private EditText firstNameField = null;
@@ -73,13 +63,14 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Event that is fired when the save button is clicked
-     * @param v
+     *
+     * @param v NOT USED
      */
     public void clickSaveContact(View v) {
         if (this.createContact()) {
             Intent intent = new Intent(v.getContext(), ViewContact.class);
             Bundle bundleOfJoy = new Bundle();
-            bundleOfJoy.putParcelable(CONTACT_KEY, this.contact);
+            bundleOfJoy.putParcelable(ContactAppUtil.CONTACT_KEY, this.contact);
             intent.putExtras(bundleOfJoy);
             startActivity(intent);
         }
@@ -87,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Clears the form fields.
+     *
      * @param v NOT USED
      */
     public void clickClearFields(View v) {
@@ -103,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Attempts to create the contact by auditing the form data then building the contact's data,
      * then creating the contact object
+     *
      * @return true if all good.
      */
     private boolean createContact() {
@@ -125,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * This function audits the data passed in the contact phone.
+     *
      * @return true if data valid, false otherwise
      */
     private boolean auditFormData() {
@@ -136,13 +130,13 @@ public class MainActivity extends AppCompatActivity {
         if (this.lastNameField.getText().toString().equals("") || this.lastNameField.getText() == null) {
             this.lastNameField.setText("");
         }
-        if (this.phoneField.length() < 7 || this.phoneField == null) {
-            this.tvErrorText.setText("Please provide the contact's first name.");
+        if (!Patterns.EMAIL_ADDRESS.matcher(this.emailField.getText()).matches()) {
+            this.tvErrorText.setText("Please provide a valid email address.");
             this.showErrorText();
             return false;
         }
-        if (!Patterns.EMAIL_ADDRESS.matcher(this.emailField.getText()).matches()) {
-            this.tvErrorText.setText("Please provide a valid email address.");
+        if (this.phoneField.length() < 7 || this.phoneField == null) {
+            this.tvErrorText.setText("Please provide the contact's phone number.");
             this.showErrorText();
             return false;
         }
@@ -166,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * This code allows the user to close the input key board when the user clicks off
      * of the keyboard.
+     *
      * @param v a view object, this is the relative layout container that houses the components of
      *          this simple application.
      */
@@ -180,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
             });
         }
         if (v instanceof ViewGroup) {
-            for (int i = 0; i <((ViewGroup) v).getChildCount(); i++) {
+            for (int i = 0; i < ((ViewGroup) v).getChildCount(); i++) {
                 View innerView = ((ViewGroup) v).getChildAt(i);
                 this.addUIListeners(innerView);
             }
@@ -189,6 +184,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * This is the actual method that physically hides the key board from view.
+     *
      * @param a this activity, i.e. the MainActivity.
      */
     private void hideKeyboard(Activity a) {
@@ -200,5 +196,4 @@ public class MainActivity extends AppCompatActivity {
             this.tvErrorText.setText(npe.getMessage());
         }
     }
-
 }
