@@ -92,9 +92,7 @@
         android:layout_height="wrap_content"
         android:text="Go Back"
         android:id="@+id/bGoBack"
-        android:onClick="clickGoBack"
-        android:layout_below="@+id/tvPhone"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:onClick="clickGoBack" />
 </RelativeLayout>
